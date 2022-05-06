@@ -1,13 +1,10 @@
 ﻿using System;
-using Presenter;
 using UnityEngine;
-using View.Interfaces;
 
 namespace Model
 {
     internal class UnitModel : BaseModel
     {
-        private UnitPresenter<IUnitView, UnitModel> _unitPresenter;
         private Vector3 _position;
         private int _row;
         private int _column;

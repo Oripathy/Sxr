@@ -8,12 +8,11 @@ namespace View
 {
     internal class EnemyView : MonoBehaviour, IEnemyView
     {
-        private GameFieldModel _gameFieldModel;
         private EnemyPresenter _enemyPresenter;
 
-        public void Init(GameFieldModel gameFieldModel, Enemy enemy)
+        public void Init(EnemyPresenter enemyPresenter)
         {
-            _enemyPresenter = new EnemyPresenter(this, enemy);
+            _enemyPresenter = enemyPresenter;
         }
     }
 }

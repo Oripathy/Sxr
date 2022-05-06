@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    internal class Enemy : BaseModel
+    internal class EnemyModel : BaseModel
     {
         public Vector3 Position { get; set; }
         public int Row { get; set; }

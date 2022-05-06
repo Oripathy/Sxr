@@ -3,15 +3,8 @@ using View.Interfaces;
 
 namespace Presenter
 {
-    internal class EnemyPresenter
+    internal class EnemyPresenter : BasePresenter<IEnemyView, EnemyModel>
     {
-        private IEnemyView _enemyView;
-        private Enemy _enemy;
-
-        public EnemyPresenter(IEnemyView enemyView, Enemy enemy)
-        {
-            _enemyView = enemyView;
-            _enemy = enemy;
-        }
+        
     }
 }

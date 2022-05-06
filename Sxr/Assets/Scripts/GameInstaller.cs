@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using DefaultNamespace;
 using Factories;
 using Model;
 using Model.GameField;
 using UnityEngine;
-using View;
 
 internal  class GameInstaller : MonoBehaviour
 {
@@ -30,15 +28,19 @@ internal  class GameInstaller : MonoBehaviour
     {
         var prefabs = new Dictionary<Type, GameObject>
         {
-            {typeof(Model.UnitModel), _unitPrefab},
-            {typeof(Enemy), _enemyPrefab},
+            {typeof(UnitModel), _unitPrefab},
+            {typeof(EnemyModel), _enemyPrefab},
             {typeof(Obstacle), _obstaclePrefab}
         };
 
         _fieldCellFactory = new FieldCellFactory(_fieldCellPrefab);
         _unitFactory = new UnitFactory(prefabs);
         _presenterFactory = new PresenterFactory();
-        _gameFieldModel = new GameFieldModel(_fieldCellFactory, _unitFactory, _presenterFactory, _difficultyManager);
+        _gameFieldModel = new GameFieldModel(_fieldCellFactory);
         _gameFieldModel.Init();
+
+        var entitySpawner = new EntitySpawner(_gameFieldModel, _difficultyManager, _unitFactory, _presenterFactory);
+        entitySpawner.SpawnUnits();
+        entitySpawner.SpawnEnemiesAndObstacles();
     }
 }

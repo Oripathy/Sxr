@@ -5,26 +5,8 @@ using View.Interfaces;
 
 namespace Presenter
 {
-    internal class UnitPresenter<K, U> : BasePresenter<IUnitView, UnitModel>
-        // where K : IUnitView
-        // where U : UnitModel
+    internal class UnitPresenter : BasePresenter<IUnitView, UnitModel>
     {
-        // private IUnitView _unitView;
-        // private UnitModel _unitModel;
-        // private GameFieldModel _gameField;
-
-        // public UnitPresenter(IUnitView unitView, Model.UnitModel unitModel, GameFieldModel gameField)
-        // {
-        //     _unitView = unitView;
-        //     _unitModel = unitModel;
-        //     _gameField = gameField;
-        // }
-
-        // public override void Init()
-        // {
-        //     _unitModel.UnitLocked += OnModelLockedStateChanged;
-        // }
-
         public void Move(Vector3 direction)
         {
             if (_gameFieldModel.IsCellEmpty(_model.Row + (int) direction.x, _model.Column + (int) direction.z,

@@ -10,7 +10,7 @@ namespace View
 {
     internal class UnitView : MonoBehaviour, IUnitView, ILockable
     {
-        private UnitPresenter<IUnitView, UnitModel> _unitPresenter;
+        private UnitPresenter _unitPresenter;
         private GameView _gameView;
         private Coroutine _coroutine;
         
@@ -21,7 +21,7 @@ namespace View
             //_gameView.SwipeReceived += OnSwipeReceived;
         }
 
-        public void Init(UnitPresenter<IUnitView, UnitModel> unitPresenter)
+        public void Init(UnitPresenter unitPresenter)
         {
             _unitPresenter = unitPresenter;
         }

@@ -1,6 +1,6 @@
 ﻿namespace View.Interfaces
 {
-    internal interface IEnemyView
+    internal interface IEnemyView : IBaseView
     {
         
     }

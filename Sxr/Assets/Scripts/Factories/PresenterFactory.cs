@@ -12,8 +12,8 @@ namespace Factories
             where K : IBaseView
             where U : BaseModel
         {
-            var obj = new T();
-            obj.Init(baseView, baseModel, gameFieldModel);
+            var presenter = new T();
+            presenter.Init(baseView, baseModel, gameFieldModel);
             return new T();
         }
     }
