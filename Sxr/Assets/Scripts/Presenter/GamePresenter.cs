@@ -1,4 +1,6 @@
-﻿using Model.Game;
+﻿using System;
+using System.Runtime.CompilerServices;
+using Model.Game;
 using UnityEngine;
 using View.Interfaces;
 
@@ -6,29 +8,45 @@ namespace Presenter
 {
     internal class GamePresenter
     {
-        private IGameView _gameView;
-        private GameModel _gameModel;
+        private IGameView _view;
+        private GameModel _model;
 
-        public GamePresenter(IGameView gameView, GameModel gameModel)
+        public event Action<Vector3> SwipeReceived;
+        public event Action<IUnitView> TouchReceived;
+        public event Action EnemyTurnStarted;
+        
+        public GamePresenter(IGameView view, GameModel model)
         {
-            _gameView = gameView;
-            _gameModel = gameModel;
+            _view = view;
+            _model = model;
         }
 
         public void Init()
         {
-            _gameView.SwipeReceived += OnSwipeReceived;
-            _gameView.TouchReceived += OnTouchReceived;
+            _model.InputActiveStateChanged += UpdateInputActiveState;
+            _model.StateSwitched += OnStateChanged;
+            _view.SwipeReceived += OnSwipeReceived;
+            _view.TouchReceived += OnTouchReceived;
         }
 
         private void OnSwipeReceived(Vector3 direction)
         {
-            
+            _model.IsSwipeReceived = true;
+            SwipeReceived?.Invoke(direction);
         }
 
-        private void OnTouchReceived(Vector3 position)
+        private void OnTouchReceived(IUnitView unitView)
         {
-            
+            TouchReceived?.Invoke(unitView);
         }
+
+        private void OnStateChanged(Type type)
+        {
+            if (type == typeof(EnemyTurn))
+                EnemyTurnStarted?.Invoke();
+        }
+
+        private void UpdateInputActiveState(bool isActive) => _view.IsInputActive = isActive;
+        public void OnUnitDestroy() => _model.DecreaseMaxSwipesAmount();
     }
 }

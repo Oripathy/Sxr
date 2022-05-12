@@ -12,8 +12,10 @@ namespace Factories
             _fieldCellPrefab = fieldCellPrefab;
         }
 
-        public void CreateFieldCell(Vector3 position) =>
-            GameObject.Instantiate(_fieldCellPrefab, position, Quaternion.identity);
+        public GameObject CreateFieldCell(Vector3 position)
+        {
+            return GameObject.Instantiate(_fieldCellPrefab, position, Quaternion.identity);
+        }
 
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using Model;
-using Model.GameField;
 using Presenter;
 using UnityEngine;
 using View.Interfaces;
@@ -10,52 +7,59 @@ namespace View
 {
     internal class UnitView : MonoBehaviour, IUnitView, ILockable
     {
+        [SerializeField] private int _row;
+        [SerializeField] private int _column;
+        [SerializeField] private Vector3 _position;
+        
         private UnitPresenter _unitPresenter;
         private GameView _gameView;
-        private Coroutine _coroutine;
         
         public event Action CollidedWithEnemy;
-
-        private void Awake()
-        {
-            //_gameView.SwipeReceived += OnSwipeReceived;
-        }
+        public event Action LockedStateChanged;
 
         public void Init(UnitPresenter unitPresenter)
         {
             _unitPresenter = unitPresenter;
         }
 
-        private void OnSwipeReceived(Vector3 direction) => _unitPresenter.Move(direction);
-        
-        public void Move(Vector3 position)
+        private void Update()
         {
-            _coroutine = StartCoroutine(StartMoving(position));
+            _position = transform.position;
         }
 
-        private IEnumerator StartMoving(Vector3 position)
+        public void UpdatePosition(Vector3 position)
         {
-            var startTime = Time.time;
-            
-            while (Time.time < startTime + 1f)
-            {
-                transform.position = Vector3.Slerp(transform.position, position, (Time.time - startTime) / 1f);
-                yield return null;
-            }
-
             transform.position = position;
         }
 
-        public void ChangeLockedState() => _unitPresenter.ChangeLockedState();
+        public void UpdateRow(int row) => _row = row + 1;
+
+        public void UpdateColumn(int column) => _column = column + 1;
 
         public void UpdateLockUI(bool isLocked)
         {
-            
+            if (!isLocked)
+                GetComponent<Renderer>().material.color = Color.green;
+            else
+                GetComponent<Renderer>().material.color = Color.gray;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        public void DestroyUnit()
         {
+            Destroy(gameObject);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponent<EnemyView>() != null)
+                CollidedWithEnemy?.Invoke();
             
+            Debug.Log(other);
+        }
+
+        public void ChangeLockedState()
+        {
+            LockedStateChanged?.Invoke();
         }
     }
 }

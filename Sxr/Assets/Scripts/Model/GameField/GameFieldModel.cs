@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace;
 using Factories;
-using Presenter;
 using UnityEngine;
 using View;
-using View.Interfaces;
 
 namespace Model.GameField
 {
@@ -39,17 +36,14 @@ namespace Model.GameField
                 for (var column = 0; column < _columnsAmount; column++)
                 {
                     spawnPosition.z = _cellSize.z * column + _initialSpawnPosition.z;
-                    _gameField[row].Add(new FieldCell());
+                    
+                    var view = _fieldCellFactory.CreateFieldCell(spawnPosition).GetComponent<FieldCellView>();
+
+                    _gameField[row].Add(new FieldCell(view));
                     _gameField[row][column].CellPosition = spawnPosition;
-                    _fieldCellFactory.CreateFieldCell(spawnPosition);
+                    _gameField[row][column].OccupiedBy = Entities.Nothing;
                 }
             }
-        }
-        
-        public bool IsCellEmpty(int row, int column, out Vector3 position)
-        {
-            position = _gameField[row][column].CellPosition;
-            return _gameField[row][column].IsEmpty;
         }
     }
 }

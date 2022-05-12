@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace;
 using Factories;
 using Model;
 using Model.GameField;
@@ -10,7 +9,10 @@ using View.Interfaces;
 
 internal class EntitySpawner
 {
+    private GamePresenter _gamePresenter;
+    private GameFieldPresenter _gameFieldPresenter;
     private GameFieldModel _gameFieldModel;
+    private UpdateHandler _updateHandler;
     private DifficultyManager _difficultyManager;
     private UnitFactory _unitFactory;
     private PresenterFactory _presenterFactory;
@@ -18,12 +20,17 @@ internal class EntitySpawner
     private int _maxUnitsAmount = 5;
     private int[] _columnUnitSpawnBounds = {19, 20};
 
-    public EntitySpawner(GameFieldModel gameFieldModel, DifficultyManager difficultyManager, UnitFactory unitFactory, PresenterFactory presenterFactory)
+    public EntitySpawner(GamePresenter gamePresenter, GameFieldModel gameFieldModel, GameFieldPresenter gameFieldPresenter,
+        DifficultyManager difficultyManager, UnitFactory unitFactory, PresenterFactory presenterFactory,
+        UpdateHandler updateHandler)
     {
+        _gamePresenter = gamePresenter;
         _gameFieldModel = gameFieldModel;
+        _gameFieldPresenter = gameFieldPresenter;
         _difficultyManager = difficultyManager;
         _unitFactory = unitFactory;
         _presenterFactory = presenterFactory;
+        _updateHandler = updateHandler;
     }
 
     public void SpawnUnits()
@@ -40,17 +47,20 @@ internal class EntitySpawner
         {
             var randomIndex = Random.Range(0, _cellsToSpawn.Count);
             var cellIndexes = _cellsToSpawn[randomIndex];
+            _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].OccupiedBy = Entities.Unit;
             var cellPosition = _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].CellPosition +
                                new Vector3(0f, 0.5f, 0f);
-            var unit = _unitFactory.CreateModel<UnitModel>(cellPosition, out var obj);
-            var view = obj.GetComponent<UnitView>();
+            var unitModel = _unitFactory.CreateModel<UnitModel>(cellPosition, out var obj);
+            unitModel.Init(_updateHandler);
+            var unitView = obj.GetComponent<UnitView>();
             var unitPresenter =
-                _presenterFactory.CreatePresenter<UnitPresenter, IUnitView, UnitModel>(view, unit,
-                    _gameFieldModel);
-            view.Init(unitPresenter);
-            unit.Position = cellPosition;
-            unit.Row = cellIndexes[0];
-            unit.Column = cellIndexes[1];
+                _presenterFactory.CreatePresenter<UnitPresenter, IUnitView, UnitModel>(unitView, unitModel,
+                    _gameFieldPresenter);
+            unitPresenter.ConcreteInit(_gamePresenter);
+            unitView.Init(unitPresenter);
+            unitModel.Position = cellPosition;
+            unitModel.Row = cellIndexes[0];
+            unitModel.Column = cellIndexes[1];
             _cellsToSpawn.Remove(cellIndexes);
         }
         
@@ -69,13 +79,12 @@ internal class EntitySpawner
                 _cellsToSpawn.Add(new[] {row, column});
             }
         }
-        
-        Debug.Log(_cellsToSpawn.Count);
-        
+
         for (var count = 0; count < difficulty; count++)
         {
             var randomIndex = Random.Range(0, _cellsToSpawn.Count);
             var cellIndexes = _cellsToSpawn[randomIndex];
+            _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].OccupiedBy = Entities.Obstacle;
             var cellPosition = _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].CellPosition +
                                new Vector3(0f, 0.5f, 0f);
             var obstacle = _unitFactory.CreateModel<Obstacle>(cellPosition, out var obj);
@@ -86,15 +95,20 @@ internal class EntitySpawner
             {
                 randomIndex = Random.Range(0, _cellsToSpawn.Count);
                 cellIndexes = _cellsToSpawn[randomIndex];
+                _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].OccupiedBy = Entities.Enemy;
                 cellPosition = _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].CellPosition +
                                new Vector3(0f, 0.5f, 0f);
-                var enemy = _unitFactory.CreateModel<EnemyModel>(cellPosition, out obj);
-                var view = obj.GetComponent<EnemyView>();
-                var presenter = _presenterFactory.CreatePresenter<EnemyPresenter, IEnemyView, EnemyModel>(view, enemy, _gameFieldModel);
-                view.Init(presenter);
-                enemy.Position = cellPosition;
-                enemy.Row = cellIndexes[0];
-                enemy.Column = cellIndexes[1];
+                var enemyModel = _unitFactory.CreateModel<EnemyModel>(cellPosition, out obj);
+                enemyModel.Init(_updateHandler);
+                var enemyView = obj.GetComponent<EnemyView>();
+                var enemyPresenter =
+                    _presenterFactory.CreatePresenter<EnemyPresenter, IEnemyView, EnemyModel>(enemyView, enemyModel,
+                        _gameFieldPresenter);
+                enemyPresenter.ConcreteInit(_gamePresenter);
+                enemyView.Init(enemyPresenter);
+                enemyModel.Position = cellPosition;
+                enemyModel.Row = cellIndexes[0];
+                enemyModel.Column = cellIndexes[1];
             }
         }
         

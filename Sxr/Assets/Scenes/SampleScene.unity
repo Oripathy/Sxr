@@ -292,13 +292,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.40557975, y: -0.579228, z: 0.40557975, w: 0.579228}
-  m_LocalPosition: {x: 9, y: 10, z: 10}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 5, y: 10, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 70, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -90, z: 0}
 --- !u!1 &1610972634
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +332,10 @@ MonoBehaviour:
   _unitPrefab: {fileID: 6539576507089487166, guid: 3012f78e5a3a22248b5614953621b7d3, type: 3}
   _enemyPrefab: {fileID: 5051753956107024262, guid: ad293d2e013b935419a7737a36873490, type: 3}
   _obstaclePrefab: {fileID: 5449213055893136955, guid: b5973c2bd457f0c44af9a028af9a03b3, type: 3}
+  _camera: {fileID: 963194227}
   _difficultyManager: {fileID: 11400000, guid: 4a355b70f5adee04291cf62c8fa12495, type: 2}
+  _updateHandlerPrefab: {fileID: 8989627311669474986, guid: 10a82e0f14502614ca1b1a7039fd9c33, type: 3}
+  _gameViewPrefab: {fileID: 3739654618748955416, guid: 66e9aef9322bd4147a0b3265d89bf2fc, type: 3}
 --- !u!4 &1610972636
 Transform:
   m_ObjectHideFlags: 0

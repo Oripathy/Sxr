@@ -1,5 +1,6 @@
 ﻿using Model;
 using Model.GameField;
+using UnityEngine;
 using View.Interfaces;
 
 namespace Presenter
@@ -10,13 +11,13 @@ namespace Presenter
     {
         private protected K _view;
         private protected U _model;
-        private protected GameFieldModel _gameFieldModel;
+        private protected GameFieldPresenter _gameFieldPresenter;
 
-        public void Init(K view, U model, GameFieldModel gameFieldModel)
+        public void Init(K view, U model, GameFieldPresenter gameFieldPresenter)
         {
             _view = view;
             _model = model;
-            _gameFieldModel = gameFieldModel;
+            _gameFieldPresenter = gameFieldPresenter;
         }
     }
 }

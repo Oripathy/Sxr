@@ -1,28 +1,34 @@
-﻿using Player;
-
+﻿
 namespace Model.Game
 {
     internal class PlayerTurn : GameState
     {
-        private InputHandler _inputHandler;
-        
-        public PlayerTurn(InputHandler inputHandler)
+        public PlayerTurn(GameModel model) : base(model)
         {
-            _inputHandler = inputHandler;
         }
         
         public override void OnEnter()
         {
-            _inputHandler.IsInputActive = false;
+            _model.IsInputActive = true;
+            _model.IsSwipeReceived = false;
         }
 
+        public override void UpdatePass()
+        {
+            SetNextState();    
+        }
+        
         public override void OnExit()
         {
+            _model.IsInputActive = false;
         }
 
         public override void SetNextState()
         {
-            throw new System.NotImplementedException();
+            if (!_model.IsSwipeReceived) 
+                return;
+            
+            _model.SwitchState<PlayerUnitsMoving>();
         }
     }
 }

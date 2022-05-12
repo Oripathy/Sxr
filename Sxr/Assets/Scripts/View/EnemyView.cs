@@ -1,5 +1,4 @@
-﻿using Model;
-using Model.GameField;
+﻿using System;
 using Presenter;
 using UnityEngine;
 using View.Interfaces;
@@ -10,9 +9,27 @@ namespace View
     {
         private EnemyPresenter _enemyPresenter;
 
+        public event Action CollidedWithUnit;
+        
         public void Init(EnemyPresenter enemyPresenter)
         {
             _enemyPresenter = enemyPresenter;
+        }
+
+        public void UpdatePosition(Vector3 position)
+        {
+            transform.position = position;
+        }
+
+        public void DestroyEnemy()
+        {
+            Destroy(gameObject);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponent<UnitView>() != null)
+                CollidedWithUnit?.Invoke();
         }
     }
 }
