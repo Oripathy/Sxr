@@ -7,19 +7,19 @@ namespace Model
 {
     internal class EnemyModel : BaseModel
     {
-        private UpdateHandler _updateHandler;
-        private Entities _entity = Entities.Enemy;
-        private Vector3 _position;
-        private Vector3 _positionToMove;
-        private Vector3 _direction;
-        private float _startTime;
-        private float _moveDuration = 0.5f;
-        private bool _shouldMove;
-        private int _row;
-        private int _column;
+        // private UpdateHandler _updateHandler;
+        // private Entities _entity = Entities.Enemy;
+        // private Vector3 _position;
+        // private Vector3 _positionToMove;
+        // private Vector3 _direction;
+        // private float _startTime;
+        // private float _moveDuration = 0.5f;
+        // private bool _shouldMove;
+        // private int _row;
+        // private int _column;
 
-        public Entities Entity => _entity;
-        public Vector3 Position
+        // public Entities Entity => _entity;
+        public override Vector3 Position
         {
             get => _position;
             set
@@ -32,7 +32,7 @@ namespace Model
             }
         }
         
-        public int Row
+        public override int Row
         {
             get => _row;
             set
@@ -44,7 +44,7 @@ namespace Model
             }
         }
 
-        public int Column
+        public override int Column
         {
             get => _column;
             set
@@ -59,18 +59,27 @@ namespace Model
         public event Action<Vector3> PositionChanged;
         public event Action EnemyDestroyed;
 
-        public void Init(UpdateHandler updateHandler)
+        public override void Init(UpdateHandler updateHandler, Vector3 position, int row, int column)
         {
+            Entity = Entities.Enemy;
+            _moveDuration = 0.5f;
             _updateHandler = updateHandler;
             _updateHandler.UpdateTicked += UpdatePass;
+            _isSubscribed = true;
+            Position = position;
+            _initialPosition = _position;
+            Row = row;
+            _initialRow = _row;
+            Column = column;
+            _initialColumn = _column;
         }
 
-        private void UpdatePass(float deltaTime)
+        /*private void UpdatePass()
         {
             MoveUnit();
-        }
+        }*/
 
-        public void SetPositionToMove(Vector3 position, Vector3 direction)
+        public override void SetPositionToMove(Vector3 position, Vector3 direction)
         {
             _direction = direction;
             _positionToMove = position;
@@ -78,11 +87,11 @@ namespace Model
             _shouldMove = true;
         }
 
-        private void MoveUnit()
+        private protected override void MoveUnit()
         {
             if (!_shouldMove)
                 return;
-
+            
             if (Time.time < _startTime + _moveDuration)
             {
                 Position = Vector3.Slerp(_position, _positionToMove, (Time.time - _startTime) / _moveDuration);
@@ -96,10 +105,22 @@ namespace Model
             }
         }
 
-        public void Destroy()
+        public override void OnLevelReload()
         {
-            EnemyDestroyed?.Invoke();
+            Position = _initialPosition;
+            Row = _initialRow;
+            Column = _initialColumn;
+            _shouldMove = false;                  
+
+            if (!_isSubscribed)
+                _updateHandler.UpdateTicked += UpdatePass;
+        }
+
+        public override void Destroy()
+        {
             _updateHandler.UpdateTicked -= UpdatePass;
+            EnemyDestroyed?.Invoke();
+            _isSubscribed = false;
         }
     }
 }

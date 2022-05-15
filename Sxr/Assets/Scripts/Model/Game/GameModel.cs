@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using View;
 
 namespace Model.Game
@@ -10,6 +11,8 @@ namespace Model.Game
         private GameState _currentState;
         private Dictionary<Type, GameState> _statesByType;
         private bool _isInputActive;
+        private bool _isPaused;
+        private int _unitsAmountSaved;
         private int _maxSwipes = 5;
         private int _swipesAmountLeft;
 
@@ -22,14 +25,19 @@ namespace Model.Game
                 InputActiveStateChanged?.Invoke(_isInputActive);
             }
         }
+        
         public bool IsSwipeReceived { get; set; }
         public int SwipesAmountLeft => _swipesAmountLeft;
+
+        public int UnitsAmountSaved => _unitsAmountSaved;
 
         public event Action<Type> StateSwitched;
         public event Action<bool> InputActiveStateChanged;
         public event Action<int> SwipesAmountChanged;
         public event Action<int> MaxSwipesAmountDecreased;
-        
+        public event Action<int> UnitsAmountSavedChanged;
+        public event Action<bool> PauseStateChanged;
+        public event Action LevelRestarted;
         
         public GameModel()
         {
@@ -50,6 +58,11 @@ namespace Model.Game
             _currentState = _statesByType[typeof(PlayerTurn)];
             _currentState.OnEnter();
         }
+        
+        private void UpdatePass()
+        {
+            _currentState.UpdatePass();
+        }
 
         public void SwitchState<T>()
             where T : GameState
@@ -63,6 +76,17 @@ namespace Model.Game
                 _currentState.OnEnter();
                 StateSwitched?.Invoke(type);
             }
+        }
+
+        public void RestartLevel()
+        {
+            _maxSwipes = 5;
+            SwipesAmountChanged?.Invoke(_maxSwipes);
+            IsInputActive = true;
+            ResetSwipesAmountLeft();
+            _currentState = _statesByType[typeof(PlayerTurn)];
+            _currentState.OnEnter();
+            LevelRestarted?.Invoke();
         }
 
         public void DecreaseSwipesAmountLeft()
@@ -89,9 +113,19 @@ namespace Model.Game
             MaxSwipesAmountDecreased?.Invoke(_maxSwipes);
         }
 
-        private void UpdatePass(float deltaTime)
+        public void ChangePausedState()
         {
-            _currentState.UpdatePass();
+            _isPaused = !_isPaused;
+            _isInputActive = !_isInputActive;
+            PauseStateChanged?.Invoke(_isPaused);
         }
+
+        public void IncreaseUnitsAmountSaved()
+        {
+            _unitsAmountSaved++;
+            UnitsAmountSavedChanged?.Invoke(_unitsAmountSaved);
+        }
+
+        public void RebuildLevel() => SceneManager.LoadScene("Scenes/SampleScene");
     }
 }

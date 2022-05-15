@@ -51,16 +51,16 @@ internal class EntitySpawner
             var cellPosition = _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].CellPosition +
                                new Vector3(0f, 0.5f, 0f);
             var unitModel = _unitFactory.CreateModel<UnitModel>(cellPosition, out var obj);
-            unitModel.Init(_updateHandler);
+            unitModel.Init(_updateHandler, cellPosition, cellIndexes[0], cellIndexes[1]);
             var unitView = obj.GetComponent<UnitView>();
             var unitPresenter =
                 _presenterFactory.CreatePresenter<UnitPresenter, IUnitView, UnitModel>(unitView, unitModel,
-                    _gameFieldPresenter);
-            unitPresenter.ConcreteInit(_gamePresenter);
+                    _gameFieldPresenter, _gamePresenter);
+            unitPresenter.ConcreteInit();
             unitView.Init(unitPresenter);
-            unitModel.Position = cellPosition;
-            unitModel.Row = cellIndexes[0];
-            unitModel.Column = cellIndexes[1];
+            // unitModel.Position = cellPosition;
+            // unitModel.Row = cellIndexes[0];
+            // unitModel.Column = cellIndexes[1];
             _cellsToSpawn.Remove(cellIndexes);
         }
         
@@ -99,12 +99,12 @@ internal class EntitySpawner
                 cellPosition = _gameFieldModel.GameField[cellIndexes[0]][cellIndexes[1]].CellPosition +
                                new Vector3(0f, 0.5f, 0f);
                 var enemyModel = _unitFactory.CreateModel<EnemyModel>(cellPosition, out obj);
-                enemyModel.Init(_updateHandler);
+                enemyModel.Init(_updateHandler, cellPosition, cellIndexes[0], cellIndexes[1]);
                 var enemyView = obj.GetComponent<EnemyView>();
                 var enemyPresenter =
                     _presenterFactory.CreatePresenter<EnemyPresenter, IEnemyView, EnemyModel>(enemyView, enemyModel,
-                        _gameFieldPresenter);
-                enemyPresenter.ConcreteInit(_gamePresenter);
+                        _gameFieldPresenter, _gamePresenter);
+                enemyPresenter.ConcreteInit();
                 enemyView.Init(enemyPresenter);
                 enemyModel.Position = cellPosition;
                 enemyModel.Row = cellIndexes[0];

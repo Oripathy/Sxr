@@ -7,6 +7,7 @@ using Model.GameField;
 using Presenter;
 using UnityEngine;
 using View;
+using View.InGameUI;
 
 internal  class GameInstaller : MonoBehaviour
 {
@@ -18,6 +19,7 @@ internal  class GameInstaller : MonoBehaviour
     [SerializeField] private DifficultyManager _difficultyManager;
     [SerializeField] private UpdateHandler _updateHandlerPrefab;
     [SerializeField] private GameView _gameViewPrefab;
+    [SerializeField] private GameObject _InGameScreen;
 
     private FieldCellFactory _fieldCellFactory;
     private UnitFactory _unitFactory;
@@ -27,6 +29,8 @@ internal  class GameInstaller : MonoBehaviour
     private GameModel _gameModel;
     private GamePresenter _gamePresenter;
     private GameView _gameView;
+    private InGameUIPresenter _inGameUIPresenter;
+    private InGameUI _inGameUI;
     private UpdateHandler _updateHandler;
 
     private void Awake()
@@ -56,6 +60,9 @@ internal  class GameInstaller : MonoBehaviour
         _gameFieldModel = new GameFieldModel(_fieldCellFactory);
         _gameFieldModel.Init();
         _gameFieldPresenter = new GameFieldPresenter(_gameFieldModel);
+        _inGameUI = _InGameScreen.GetComponent<InGameUI>();
+        _inGameUIPresenter = new InGameUIPresenter();
+        _inGameUIPresenter.Init(_inGameUI, _gameModel);
 
         var entitySpawner = new EntitySpawner(_gamePresenter, _gameFieldModel, _gameFieldPresenter, _difficultyManager,
             _unitFactory, _presenterFactory, _updateHandler);

@@ -44,10 +44,9 @@ namespace View
                 GetComponent<Renderer>().material.color = Color.gray;
         }
 
-        public void DestroyUnit()
-        {
-            Destroy(gameObject);
-        }
+        public void DisableUnit() => gameObject.SetActive(false);
+
+        public void EnableUnit() => gameObject.SetActive(true);
 
         private void OnTriggerEnter(Collider other)
         {

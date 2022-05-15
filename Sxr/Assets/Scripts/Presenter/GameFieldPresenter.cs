@@ -12,10 +12,9 @@ namespace Presenter
             _model = model;
         }
 
-        public void OnUnitDestroy(int row, int column)
-        {
-            _model.GameField[row][column].OccupiedBy = Entities.Nothing;
-        }
+        public void ReleaseCell(int row, int column) => _model.GameField[row][column].OccupiedBy = Entities.Nothing;
+
+        public void TakeCell(int row, int column, Entities entity) => _model.GameField[row][column].OccupiedBy = entity;
 
         public bool IsCellEmpty(int row, int column, Vector3 direction, Entities entity, out Vector3 position)
         {

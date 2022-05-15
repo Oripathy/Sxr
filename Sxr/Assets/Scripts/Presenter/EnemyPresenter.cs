@@ -7,17 +7,13 @@ namespace Presenter
 {
     internal class EnemyPresenter : BasePresenter<IEnemyView, EnemyModel>
     {
-        private GamePresenter _gamePresenter;
+        // private GamePresenter _gamePresenter;
         private Dictionary<int, Vector3> _numbersToDirection;
 
-        public void ConcreteInit(GamePresenter gamePresenter)
+        public void ConcreteInit(/*GamePresenter gamePresenter*/)
         {
-            _gamePresenter = gamePresenter;
-            _gamePresenter.EnemyTurnStarted += Move;
-            _view.CollidedWithUnit += OnCollision;
-            _model.PositionChanged += OnPositionChanged;
-            _model.EnemyDestroyed += OnDestroyed;
-            
+            _gamePresenter.LevelRestarted += OnLevelReloaded;
+            // _gamePresenter = gamePresenter;
             _numbersToDirection = new Dictionary<int, Vector3>
             {
                 {0, Vector3.forward},
@@ -25,8 +21,35 @@ namespace Presenter
                 {2, Vector3.left},
                 {3, Vector3.right}
             };
+            
+            Subscribe();
         }
 
+        private protected override void Subscribe()
+        {
+            _view.CollidedWithUnit += OnCollision;
+            _model.EnemyDestroyed += OnUnitDestroyed;
+            _gamePresenter.EnemyTurnStarted += Move;
+            _model.PositionChanged += OnPositionChanged;
+            _isSubscribed = true;
+        }
+
+        private protected override void Unsubscribe()
+        {
+            _view.CollidedWithUnit -= OnCollision;
+            _model.EnemyDestroyed -= OnUnitDestroyed;
+            _gamePresenter.EnemyTurnStarted -= Move;
+            _model.PositionChanged -= OnPositionChanged;
+            _isSubscribed = false;
+        }
+
+        public override void OnUnitDestroyed()
+        {
+            _view.DisableUnit();
+            _gameFieldPresenter.ReleaseCell(_model.Row, _model.Column);
+            Unsubscribe();
+        }
+        
         private void Move()
         {
             var randomNumber = Random.Range(0, _numbersToDirection.Count);
@@ -36,14 +59,19 @@ namespace Presenter
                 _model.SetPositionToMove(position, direction);
         }
 
-        private void OnPositionChanged(Vector3 position) => _view.UpdatePosition(position);
+        public override void OnPositionChanged(Vector3 position) => _view.UpdatePosition(position);
 
-        private void OnCollision() => _model.Destroy();
+        public override void OnCollision() => _model.Destroy();
 
-        private void OnDestroyed()
+        private protected override void OnLevelReloaded()
         {
-            _view.DestroyEnemy();
-            _gameFieldPresenter.OnUnitDestroy(_model.Row, _model.Column);
+            _gameFieldPresenter.ReleaseCell(_model.Row, _model.Column);
+            _view.EnableUnit();
+            _model.OnLevelReload();
+            _gameFieldPresenter.TakeCell(_model.Row, _model.Column, _model.Entity);
+            
+            if (!_isSubscribed)
+                Subscribe();
         }
     }
 }

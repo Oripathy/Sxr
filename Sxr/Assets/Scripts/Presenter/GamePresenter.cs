@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using Model.Game;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using View.Interfaces;
 
 namespace Presenter
@@ -12,8 +12,8 @@ namespace Presenter
         private GameModel _model;
 
         public event Action<Vector3> SwipeReceived;
-        public event Action<IUnitView> TouchReceived;
         public event Action EnemyTurnStarted;
+        public event Action LevelRestarted;
         
         public GamePresenter(IGameView view, GameModel model)
         {
@@ -24,20 +24,15 @@ namespace Presenter
         public void Init()
         {
             _model.InputActiveStateChanged += UpdateInputActiveState;
-            _model.StateSwitched += OnStateChanged;
             _view.SwipeReceived += OnSwipeReceived;
-            _view.TouchReceived += OnTouchReceived;
+            _model.StateSwitched += OnStateChanged;
+            _model.LevelRestarted += OnLevelRestarted;
         }
 
         private void OnSwipeReceived(Vector3 direction)
         {
             _model.IsSwipeReceived = true;
             SwipeReceived?.Invoke(direction);
-        }
-
-        private void OnTouchReceived(IUnitView unitView)
-        {
-            TouchReceived?.Invoke(unitView);
         }
 
         private void OnStateChanged(Type type)
@@ -47,6 +42,9 @@ namespace Presenter
         }
 
         private void UpdateInputActiveState(bool isActive) => _view.IsInputActive = isActive;
+        
+        private void OnLevelRestarted() => LevelRestarted?.Invoke();
+        
         public void OnUnitDestroy() => _model.DecreaseMaxSwipesAmount();
     }
 }
