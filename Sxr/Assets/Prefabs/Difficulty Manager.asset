@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8721792eafbc42d2985feb6adf60004b, type: 3}
   m_Name: Difficulty Manager
   m_EditorClassIdentifier: 
-  _currentDifficulty: 40
+  _currentDifficulty: 20

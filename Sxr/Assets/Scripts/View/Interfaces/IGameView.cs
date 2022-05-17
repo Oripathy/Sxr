@@ -7,6 +7,5 @@ namespace View.Interfaces
     {
         public bool IsInputActive { get; set; }
         public event Action<Vector3> SwipeReceived;
-        public event Action<IUnitView> TouchReceived;
     }
 }

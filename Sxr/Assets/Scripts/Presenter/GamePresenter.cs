@@ -1,12 +1,11 @@
 ﻿using System;
 using Model.Game;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using View.Interfaces;
 
 namespace Presenter
 {
-    internal class GamePresenter
+    internal class GamePresenter : IUnitManager
     {
         private IGameView _view;
         private GameModel _model;
@@ -45,6 +44,8 @@ namespace Presenter
         
         private void OnLevelRestarted() => LevelRestarted?.Invoke();
         
-        public void OnUnitDestroy() => _model.DecreaseMaxSwipesAmount();
+        public void OnUnitDestroyed() => _model.DecreaseMaxSwipesAmount();
+
+        public void OnUnitReachedEndOfGameField() => _model.IncreaseUnitsAmountSaved();
     }
 }

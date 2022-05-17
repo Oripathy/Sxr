@@ -7,7 +7,6 @@ namespace Presenter
 {
     internal class InGameUIPresenter
     {
-        //TODO : Connect this shit with GameModel for events
         private IInGameUI _view;
         private GameModel _gameModel;
 
@@ -21,25 +20,29 @@ namespace Presenter
         {
             _view = view;
             _gameModel = gameModel;
-            _view.SetPauseMenuActive(false);
+            _view.SetInGameMenuActive(false);
             _view.PauseButtonPressed += OnPauseButtonPressed;
             _view.RestartButtonPressed += OnRestartButtonPressed;
             _view.RebuildButtonPressed += OnRebuildButtonPressed;
             _view.MainMenuButtonPressed += OnMainMenuButtonPressed;
             _view.ResumeButtonPressed += OnResumeButtonPressed;
+            _view.NextLevelButtonPressed += OnNextLevelButtonPressed;
             
             _gameModel.StateSwitched += OnStateChanged;
             _gameModel.MaxSwipesAmountDecreased += OnMaxSwipesAmountChanged;
             _gameModel.UnitsAmountSavedChanged += OnUnitsAmountSavedChanged;
             _gameModel.SwipesAmountChanged += OnSwipesAmountLeftChanged;
             _gameModel.PauseStateChanged += ChangePauseMenuActiveState;
+            _gameModel.GameWon += OnGameWon;
+            _gameModel.GameLost += OnGameLost;
         }
 
         private void OnPauseButtonPressed() => _gameModel.ChangePausedState();
         private void OnRestartButtonPressed() => _gameModel.RestartLevel();
         private void OnRebuildButtonPressed() => _gameModel.RebuildLevel();
-        private void OnMainMenuButtonPressed(){}
+        private void OnMainMenuButtonPressed() => _gameModel.GoToMainMenu();
         private void OnResumeButtonPressed() => _gameModel.ChangePausedState();
+        private void OnNextLevelButtonPressed() => _gameModel.GoToNextLevel();
 
         private void OnStateChanged(Type type)
         {
@@ -53,6 +56,10 @@ namespace Presenter
 
         private void OnSwipesAmountLeftChanged(int amount) => _view.UpdateSwipesAmountLeftText(amount);
 
-        public void ChangePauseMenuActiveState(bool isActive) => _view.SetPauseMenuActive(isActive);
+        private void ChangePauseMenuActiveState(bool isActive) => _view.SetInGameMenuActive(isActive);
+
+        private void OnGameWon() => _view.ConvertMenuToWonMenu();
+
+        private void OnGameLost() => _view.ConvertMenuToLostMenu();
     }
 }

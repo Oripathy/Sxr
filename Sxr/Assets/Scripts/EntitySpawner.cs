@@ -57,10 +57,6 @@ internal class EntitySpawner
                 _presenterFactory.CreatePresenter<UnitPresenter, IUnitView, UnitModel>(unitView, unitModel,
                     _gameFieldPresenter, _gamePresenter);
             unitPresenter.ConcreteInit();
-            unitView.Init(unitPresenter);
-            // unitModel.Position = cellPosition;
-            // unitModel.Row = cellIndexes[0];
-            // unitModel.Column = cellIndexes[1];
             _cellsToSpawn.Remove(cellIndexes);
         }
         
@@ -105,10 +101,6 @@ internal class EntitySpawner
                     _presenterFactory.CreatePresenter<EnemyPresenter, IEnemyView, EnemyModel>(enemyView, enemyModel,
                         _gameFieldPresenter, _gamePresenter);
                 enemyPresenter.ConcreteInit();
-                enemyView.Init(enemyPresenter);
-                enemyModel.Position = cellPosition;
-                enemyModel.Row = cellIndexes[0];
-                enemyModel.Column = cellIndexes[1];
             }
         }
         

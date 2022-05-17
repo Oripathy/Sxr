@@ -36,8 +36,12 @@ namespace Model.GameField
                 for (var column = 0; column < _columnsAmount; column++)
                 {
                     spawnPosition.z = _cellSize.z * column + _initialSpawnPosition.z;
+                    FieldCellView view;
                     
-                    var view = _fieldCellFactory.CreateFieldCell(spawnPosition).GetComponent<FieldCellView>();
+                    if (column == 0)
+                        view = _fieldCellFactory.CreateFieldCell(spawnPosition, true).GetComponent<FieldCellView>();
+                    else
+                        view = _fieldCellFactory.CreateFieldCell(spawnPosition, false).GetComponent<FieldCellView>();
 
                     _gameField[row].Add(new FieldCell(view));
                     _gameField[row][column].CellPosition = spawnPosition;

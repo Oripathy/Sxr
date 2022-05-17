@@ -12,6 +12,7 @@ using View.InGameUI;
 internal  class GameInstaller : MonoBehaviour
 {
     [SerializeField] private GameObject _fieldCellPrefab;
+    [SerializeField] private GameObject _endOfGameFieldCellPrefab;
     [SerializeField] private GameObject _unitPrefab;
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _obstaclePrefab;
@@ -48,22 +49,24 @@ internal  class GameInstaller : MonoBehaviour
         };
 
         _updateHandler = Instantiate(_updateHandlerPrefab).GetComponent<UpdateHandler>();
-        _fieldCellFactory = new FieldCellFactory(_fieldCellPrefab);
+        _fieldCellFactory = new FieldCellFactory(_fieldCellPrefab, _endOfGameFieldCellPrefab);
         _unitFactory = new UnitFactory(prefabs);
         _presenterFactory = new PresenterFactory();
+        
         _gameView = Instantiate(_gameViewPrefab).GetComponent<GameView>();
-        _gameView.Init(_camera);
-        _gameModel = new GameModel();
+        _inGameUI = _InGameScreen.GetComponent<InGameUI>();
+        _gameModel = new GameModel(_difficultyManager);
+        _inGameUIPresenter = new InGameUIPresenter();
         _gamePresenter = new GamePresenter(_gameView, _gameModel);
+        _gameView.Init(_camera);
+        _inGameUIPresenter.Init(_inGameUI, _gameModel);
         _gamePresenter.Init();
         _gameModel.Init(_updateHandler);
+        
         _gameFieldModel = new GameFieldModel(_fieldCellFactory);
-        _gameFieldModel.Init();
         _gameFieldPresenter = new GameFieldPresenter(_gameFieldModel);
-        _inGameUI = _InGameScreen.GetComponent<InGameUI>();
-        _inGameUIPresenter = new InGameUIPresenter();
-        _inGameUIPresenter.Init(_inGameUI, _gameModel);
-
+        _gameFieldModel.Init();
+        
         var entitySpawner = new EntitySpawner(_gamePresenter, _gameFieldModel, _gameFieldPresenter, _difficultyManager,
             _unitFactory, _presenterFactory, _updateHandler);
         entitySpawner.SpawnUnits();

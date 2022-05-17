@@ -7,23 +7,8 @@ namespace Model
 {
     internal class UnitModel : BaseModel
     {
-        // private UpdateHandler _updateHandler;
-        // private Entities _entity = Entities.Unit;
-        // private Vector3 _position;
-        // private Vector3 _initialPosition;
-        // private Vector3 _positionToMove;
-        // private Vector3 _direction;
-        // private float _startTime;
-        // private float _moveDuration = 0.5f;
-        // private int _row;
-        // private int _initialRow;
-        // private int _column;
-        // private int _initialColumn;
         private bool _isLocked;
-        // private bool _shouldMove;
-        // private bool _isSubscribed;
 
-        //public Entities Entity => _entity;
         public UpdateHandler UpdateHandler => _updateHandler;
         public override Vector3 Position
         {
@@ -65,7 +50,7 @@ namespace Model
                 if (_column == 0)
                 {
                     EndOfGameFieldReached?.Invoke();
-                    Destroy();
+                    Unsubscribe();
                 }
             }
         }
@@ -86,15 +71,14 @@ namespace Model
         public event Action<bool> UnitLocked;
         public event Action UnitDestroyed;
         public event Action EndOfGameFieldReached;
-        public event Action LevelReloaded;
+
 
         public override void Init(UpdateHandler updateHandler, Vector3 position, int row, int column)
         {
             Entity = Entities.Unit;
             _moveDuration = 0.5f;
             _updateHandler = updateHandler;
-            _updateHandler.UpdateTicked += UpdatePass;
-            _isSubscribed = true;
+            Subscribe();
             Position = position;
             _initialPosition = _position;
             Row = row;
@@ -103,11 +87,6 @@ namespace Model
             _initialColumn = _column;
         }
 
-        // private void UpdatePass()
-        // {
-        //     MoveUnit();
-        // }
-        
         public override void SetPositionToMove(Vector3 position, Vector3 direction)
         {
             _positionToMove = position;
@@ -143,14 +122,23 @@ namespace Model
             _shouldMove = false;
 
             if (!_isSubscribed)
-                _updateHandler.UpdateTicked += UpdatePass;
-            
-            LevelReloaded?.Invoke();
+                Subscribe();
         }
 
         public override void Destroy()
         {
             UnitDestroyed?.Invoke();
+            Unsubscribe();
+        }
+
+        private void Subscribe()
+        {
+            _updateHandler.UpdateTicked += UpdatePass;
+            _isSubscribed = true;
+        }
+
+        private void Unsubscribe()
+        {
             _updateHandler.UpdateTicked -= UpdatePass;
             _isSubscribed = false;
         }

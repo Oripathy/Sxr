@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8567113221477639197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8567113221477639195}
+  - component: {fileID: 8567113221477639196}
+  m_Layer: 0
+  m_Name: GameInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8567113221477639195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8567113221477639197}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8567113221477639196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8567113221477639197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3213513dd69540cd93d4f765424461cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fieldCellPrefab: {fileID: 7264302001402539473, guid: cf1833fee69ce7f4295b618ebd8a6a02, type: 3}
+  _endOfGameFieldCellPrefab: {fileID: 7264302001402539473, guid: 727afa63bf04deb43a57037be70a365f, type: 3}
+  _unitPrefab: {fileID: 6539576507089487166, guid: 3012f78e5a3a22248b5614953621b7d3, type: 3}
+  _enemyPrefab: {fileID: 5051753956107024262, guid: ad293d2e013b935419a7737a36873490, type: 3}
+  _obstaclePrefab: {fileID: 5449213055893136955, guid: b5973c2bd457f0c44af9a028af9a03b3, type: 3}
+  _camera: {fileID: 0}
+  _difficultyManager: {fileID: 11400000, guid: 4a355b70f5adee04291cf62c8fa12495, type: 2}
+  _updateHandlerPrefab: {fileID: 8989627311669474986, guid: 10a82e0f14502614ca1b1a7039fd9c33, type: 3}
+  _gameViewPrefab: {fileID: 3739654618748955416, guid: 66e9aef9322bd4147a0b3265d89bf2fc, type: 3}
+  _InGameScreen: {fileID: 8884854979535102029, guid: 60378f173241bbe46bba09f8405473f1, type: 3}

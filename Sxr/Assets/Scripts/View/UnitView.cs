@@ -9,23 +9,9 @@ namespace View
     {
         [SerializeField] private int _row;
         [SerializeField] private int _column;
-        [SerializeField] private Vector3 _position;
-        
-        private UnitPresenter _unitPresenter;
-        private GameView _gameView;
         
         public event Action CollidedWithEnemy;
         public event Action LockedStateChanged;
-
-        public void Init(UnitPresenter unitPresenter)
-        {
-            _unitPresenter = unitPresenter;
-        }
-
-        private void Update()
-        {
-            _position = transform.position;
-        }
 
         public void UpdatePosition(Vector3 position)
         {

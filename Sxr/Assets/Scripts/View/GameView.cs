@@ -10,7 +10,6 @@ namespace View
         [field : SerializeField] public bool IsInputActive { get; set; }
         
         public event Action<Vector3> SwipeReceived;
-        public event Action<IUnitView> TouchReceived;
 
         private void Update()
         {

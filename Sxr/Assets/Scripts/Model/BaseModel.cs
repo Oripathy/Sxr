@@ -7,7 +7,6 @@ namespace Model
     internal abstract class BaseModel
     {
         private protected UpdateHandler _updateHandler;
-        // private protected Entities _entity;
         private protected Vector3 _position;
         private protected Vector3 _initialPosition;
         private protected Vector3 _positionToMove;

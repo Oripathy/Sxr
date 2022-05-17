@@ -7,18 +7,6 @@ namespace Model
 {
     internal class EnemyModel : BaseModel
     {
-        // private UpdateHandler _updateHandler;
-        // private Entities _entity = Entities.Enemy;
-        // private Vector3 _position;
-        // private Vector3 _positionToMove;
-        // private Vector3 _direction;
-        // private float _startTime;
-        // private float _moveDuration = 0.5f;
-        // private bool _shouldMove;
-        // private int _row;
-        // private int _column;
-
-        // public Entities Entity => _entity;
         public override Vector3 Position
         {
             get => _position;
@@ -73,11 +61,6 @@ namespace Model
             Column = column;
             _initialColumn = _column;
         }
-
-        /*private void UpdatePass()
-        {
-            MoveUnit();
-        }*/
 
         public override void SetPositionToMove(Vector3 position, Vector3 direction)
         {
