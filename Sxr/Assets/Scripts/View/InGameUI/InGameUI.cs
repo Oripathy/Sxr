@@ -70,8 +70,8 @@ namespace View.InGameUI
         {
             SetInGameMenuActive(true);
             _resumeButton.gameObject.SetActive(false);
-            _restartButton.gameObject.SetActive(false);
-            _rebuildButton.gameObject.SetActive(false);
+            _restartButton.gameObject.SetActive(true);
+            _rebuildButton.gameObject.SetActive(true);
             _nextLevelButton.gameObject.SetActive(false);
             _pauseButton.enabled = false;
             _menuTitleText.text = "You lost";
