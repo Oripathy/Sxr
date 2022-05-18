@@ -14,7 +14,8 @@ namespace Factories
             _prefabs = prefabs;
         }
 
-        public T CreateModel<T>(Vector3 position, out GameObject obj) where T : BaseModel, new()
+        public T CreateModel<T>(Vector3 position, out GameObject obj) 
+            where T : BaseModel, new()
         {
             _prefabs.TryGetValue(typeof(T), out var prefab); 
             obj = GameObject.Instantiate(prefab, position, Quaternion.identity);

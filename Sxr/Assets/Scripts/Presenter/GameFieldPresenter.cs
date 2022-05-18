@@ -40,7 +40,7 @@ namespace Presenter
                     }
                     else
                     { 
-                        position = _model.GameField[nextRow][nextColumn].CellPosition;
+                        position = _model.GameField[nextRow][nextColumn].Position;
                         _model.GameField[row][column].OccupiedBy = Entities.Nothing;
                         
                         if (occupiedBy == Entities.Nothing)
@@ -57,7 +57,9 @@ namespace Presenter
                     }
                     else
                     {
-                        position = _model.GameField[nextRow][nextColumn].CellPosition;
+                        position = _model.GameField[nextRow][nextColumn].Position;
+                        if (_model.GameField[row][column].OccupiedBy == Entities.Obstacle)
+                            Debug.Log("here " + row + " " + column + "towards : " + nextRow + " " + nextColumn);
                         _model.GameField[row][column].OccupiedBy = Entities.Nothing;
 
                         if (occupiedBy == Entities.Nothing)

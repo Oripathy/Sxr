@@ -20,8 +20,10 @@ namespace Presenter
             _model = model;
             _gameFieldPresenter = gameFieldPresenter;
             _unitManager = unitManager;
+            ConcreteInit();
         }
 
+        private protected abstract void ConcreteInit();
         private protected abstract void Subscribe();
         private protected abstract void Unsubscribe();
         private protected abstract void OnPositionChanged(Vector3 position);

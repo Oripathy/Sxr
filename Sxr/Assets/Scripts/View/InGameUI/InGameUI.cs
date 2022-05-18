@@ -30,8 +30,11 @@ namespace View.InGameUI
         
         private void Start()
         {
+            _pauseMenu.SetActive(false);
             _pauseButton.enabled = true;
             _resumeButton.gameObject.SetActive(true);
+            _restartButton.gameObject.SetActive(true);
+            _rebuildButton.gameObject.SetActive(true);
             _nextLevelButton.gameObject.SetActive(false);
             _menuTitleText.text = "Pause";
             _pauseButton.onClick.AddListener(() => PauseButtonPressed?.Invoke());
@@ -56,6 +59,8 @@ namespace View.InGameUI
         {
             SetInGameMenuActive(true);
             _resumeButton.gameObject.SetActive(false);
+            _restartButton.gameObject.SetActive(false);
+            _rebuildButton.gameObject.SetActive(false);
             _nextLevelButton.gameObject.SetActive(true);
             _pauseButton.enabled = false;
             _menuTitleText.text = "You won";
@@ -65,6 +70,8 @@ namespace View.InGameUI
         {
             SetInGameMenuActive(true);
             _resumeButton.gameObject.SetActive(false);
+            _restartButton.gameObject.SetActive(false);
+            _rebuildButton.gameObject.SetActive(false);
             _nextLevelButton.gameObject.SetActive(false);
             _pauseButton.enabled = false;
             _menuTitleText.text = "You lost";

@@ -7,7 +7,7 @@ namespace Presenter
 {
     internal class UnitPresenter : BasePresenter<IUnitView, UnitModel>
     {
-        public void ConcreteInit()
+        private protected override void ConcreteInit()
         {
             _unitManager.LevelRestarted += OnLevelReloaded;
             Subscribe();
@@ -25,7 +25,6 @@ namespace Presenter
             _view.LockedStateChanged += OnTouchReceived;
             _view.CollidedWithEnemy += OnCollision;
             _isSubscribed = true;
-            Debug.Log("Subscribe");
         }
 
         private protected override void Unsubscribe()
@@ -40,7 +39,6 @@ namespace Presenter
             _view.LockedStateChanged -= OnTouchReceived;
             _view.CollidedWithEnemy -= OnCollision;
             _isSubscribed = false;
-            Debug.Log("Uns");
         }
 
         private void OnSwipeReceived(Vector3 direction) => _model.UpdateHandler.ExecuteCoroutine(CheckCell(direction));
@@ -86,9 +84,9 @@ namespace Presenter
             if (!_isSubscribed)
                 Subscribe();
             
+            _gameFieldPresenter.ReleaseCell(_model.Row, _model.Column);
             _model.OnLevelReload();
             _view.EnableUnit();
-            _gameFieldPresenter.ReleaseCell(_model.Row, _model.Column);
             _gameFieldPresenter.TakeCell(_model.Row, _model.Column, _model.Entity);
         }
 

@@ -33,6 +33,7 @@ namespace Presenter
             _gameModel.UnitsAmountSavedChanged += OnUnitsAmountSavedChanged;
             _gameModel.SwipesAmountChanged += OnSwipesAmountLeftChanged;
             _gameModel.PauseStateChanged += ChangePauseMenuActiveState;
+            _gameModel.LevelRestarted += OnLevelRestarted;
             _gameModel.GameWon += OnGameWon;
             _gameModel.GameLost += OnGameLost;
         }
@@ -61,5 +62,7 @@ namespace Presenter
         private void OnGameWon() => _view.ConvertMenuToWonMenu();
 
         private void OnGameLost() => _view.ConvertMenuToLostMenu();
+
+        private void OnLevelRestarted() => _view.SetInGameMenuActive(false);
     }
 }

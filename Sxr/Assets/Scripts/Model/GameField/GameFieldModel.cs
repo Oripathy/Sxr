@@ -44,7 +44,7 @@ namespace Model.GameField
                         view = _fieldCellFactory.CreateFieldCell(spawnPosition, false).GetComponent<FieldCellView>();
 
                     _gameField[row].Add(new FieldCell(view));
-                    _gameField[row][column].CellPosition = spawnPosition;
+                    _gameField[row][column].Position = spawnPosition;
                     _gameField[row][column].OccupiedBy = Entities.Nothing;
                 }
             }

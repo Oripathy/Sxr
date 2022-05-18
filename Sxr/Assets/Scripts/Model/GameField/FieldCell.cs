@@ -22,12 +22,15 @@ namespace Model.GameField
         
         private protected Entities _occupiedBy;
 
-        public Vector3 CellPosition { get; set; }
+        public Vector3 Position { get; set; }
         public Entities OccupiedBy
         {
             get => _occupiedBy;
             set
             {
+                if (_occupiedBy == Entities.Obstacle)
+                    Debug.Log("Changed from " + _occupiedBy + " to " + value);
+                
                 _occupiedBy = value; 
                 _view.occupiedBy = value; // for debug only
             }

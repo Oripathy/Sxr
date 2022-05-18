@@ -38,8 +38,6 @@ namespace View
         {
             if (other.GetComponent<EnemyView>() != null)
                 CollidedWithEnemy?.Invoke();
-            
-            Debug.Log(other);
         }
 
         public void ChangeLockedState()

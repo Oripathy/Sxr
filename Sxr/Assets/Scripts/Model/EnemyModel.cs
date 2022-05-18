@@ -15,7 +15,7 @@ namespace Model
                 if (_position == value)
                     return;
 
-                _position = value;
+                _position = new Vector3(value.x, 0.5F, value.z);
                 PositionChanged?.Invoke(_position);
             }
         }
@@ -82,9 +82,9 @@ namespace Model
             else
             {
                 Position = _positionToMove;
-                _shouldMove = false;
                 Row += (int) _direction.x;
                 Column += (int) _direction.z;
+                _shouldMove = false;
             }
         }
 

@@ -109,6 +109,7 @@ namespace Model.Game
             _maxSwipes = 5;
             SwipesAmountChanged?.Invoke(_maxSwipes);
             IsInputActive = true;
+            _isPaused = false;
             ResetSwipesAmountLeft();
             _currentState = _statesByType[typeof(PlayerTurn)];
             _currentState.OnEnter();
