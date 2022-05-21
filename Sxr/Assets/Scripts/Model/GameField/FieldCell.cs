@@ -20,7 +20,7 @@ namespace Model.GameField
             _view = view;
         }        
         
-        private protected Entities _occupiedBy;
+        private Entities _occupiedBy;
 
         public Vector3 Position { get; set; }
         public Entities OccupiedBy
@@ -28,9 +28,6 @@ namespace Model.GameField
             get => _occupiedBy;
             set
             {
-                if (_occupiedBy == Entities.Obstacle)
-                    Debug.Log("Changed from " + _occupiedBy + " to " + value);
-                
                 _occupiedBy = value; 
                 _view.occupiedBy = value; // for debug only
             }

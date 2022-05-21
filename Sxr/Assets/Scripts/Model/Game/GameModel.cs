@@ -9,7 +9,7 @@ using View;
 namespace Model.Game
 {
     [Serializable]
-    internal class DataForSave
+    internal class Data
     {
         public int totalUnitsAmountSaved;
         public int achievedDifficulty;
@@ -65,7 +65,7 @@ namespace Model.Game
 
         public void Init(UpdateHandler updateHandler)
         {
-            var savedData = LoadTotalUnitsAmountSaved();
+            var savedData = LoadData();
             _totalUnitsAmountSaved = savedData.totalUnitsAmountSaved;
             _difficultyManager.SetDifficulty(savedData.achievedDifficulty);
             _updateHandler = updateHandler;
@@ -107,7 +107,7 @@ namespace Model.Game
         public void RestartLevel()
         {
             _maxSwipes = 5;
-            SwipesAmountChanged?.Invoke(_maxSwipes);
+            UpdateUI();
             IsInputActive = true;
             _isPaused = false;
             ResetSwipesAmountLeft();
@@ -168,7 +168,7 @@ namespace Model.Game
         {
             _difficultyManager.IncreaseDifficulty();
             _totalUnitsAmountSaved += _unitsAmountSavedAtThisSession;
-            SaveTotalUnitsAmountSaved(_totalUnitsAmountSaved);
+            SaveData(_totalUnitsAmountSaved);
             _isInputActive = false;
             GameWon?.Invoke();
         }
@@ -186,37 +186,41 @@ namespace Model.Game
             RebuildLevel();
         }
 
-        private void SaveTotalUnitsAmountSaved(int value)
+        private void SaveData(int value)
         {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            string path = Application.persistentDataPath + "/units_amount_saved.oi";
+            string path = Path.Combine(Application.persistentDataPath, "data.oi");
             FileStream stream = new FileStream(path, FileMode.Create);
             
-            var dataForSave = new DataForSave
+            var data = new Data
             {
                 totalUnitsAmountSaved = value,
                 achievedDifficulty =  _difficultyManager.CurrentDifficulty
             };
             
-            binaryFormatter.Serialize(stream, dataForSave);
+            binaryFormatter.Serialize(stream, data);
             stream.Close();
         }
 
-        private DataForSave LoadTotalUnitsAmountSaved()
+        private Data LoadData()
         {
-            string path = Application.persistentDataPath + "/units_amount_saved.oi";
-
+            string path = Path.Combine(Application.persistentDataPath, "data.oi");
+            
             if (File.Exists(path))
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 FileStream stream = new FileStream(path, FileMode.Open);
-                var dataForSave = binaryFormatter.Deserialize(stream) as DataForSave;
+                var data = binaryFormatter.Deserialize(stream) as Data;
                 stream.Close();
-                return dataForSave;
+                return data;
             }
 
             Debug.Log("Save file not found");
-            return new DataForSave();
+            return new Data()
+            {
+                totalUnitsAmountSaved = 0,
+                achievedDifficulty = 1
+            };
         }
     }
 }

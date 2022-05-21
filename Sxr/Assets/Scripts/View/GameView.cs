@@ -10,7 +10,6 @@ namespace View
 
         private Vector2 _startPosition;
         private Vector2 _swipeDelta;
-        private Touch _touch;
         private bool _isTouched;
         
         [field : SerializeField] public bool IsInputActive { get; set; }
@@ -22,11 +21,13 @@ namespace View
             if (IsInputActive)
             {
                 HandlePCInput(); 
+                //HandleMobileInput();
             }
         }
 
         public void Init(Camera cameraMain) => _camera = cameraMain;
 
+        #region PCInput
         private void HandlePCInput()
         {
             if (Input.GetMouseButtonDown(0))
@@ -51,7 +52,6 @@ namespace View
 
                 if (_swipeDelta.magnitude > 150)
                 {
-                    Debug.Log("sw");
                     float x = _swipeDelta.x;
                     float y = _swipeDelta.y;
                     var direction = new Vector3();
@@ -81,29 +81,31 @@ namespace View
                     lockable.ChangeLockedState();
             }
         }
-        
+        #endregion
+
+        #region MobileInput
         private void HandleMobileInput()
         {
             if (Input.touchCount > 0)
             {
                 var touch = Input.GetTouch(0);
 
-                if (_touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began)
                 {
                     _isTouched = true;
-                    _startPosition = _touch.position;
+                    _startPosition = touch.position;
                 }
-                else if (_touch.phase == TouchPhase.Ended || _touch.phase == TouchPhase.Canceled)
+                else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                 {
-                    Touch(touch);
+                    Touch(ref touch);
                     Reset();
                 }
                 
-                DetectSwipe(touch);
+                DetectSwipe(ref touch);
             }
         }
         
-        private void DetectSwipe(Touch touch)
+        private void DetectSwipe(ref Touch touch)
         {
             if (_isTouched)
             {
@@ -130,7 +132,7 @@ namespace View
             }
         }
 
-        private void Touch(Touch touch)
+        private void Touch(ref Touch touch)
         {
             var ray = _camera.ScreenPointToRay(touch.position);
                 
@@ -140,6 +142,7 @@ namespace View
                     lockable.ChangeLockedState();
             }
         }
+        #endregion
 
         private void Reset()
         {

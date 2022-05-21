@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Model.Game;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using View.MainMenu;
 
@@ -17,7 +20,8 @@ namespace Presenter.MainMenu
 
         public void Init()
         {
-            _view.SetCurrentDifficultyText(_difficultyManager.CurrentDifficulty);
+            var difficulty = LoadDifficulty();
+            _view.SetCurrentDifficultyText(difficulty);
             _view.StartButtonPressed += OnStartButtonPressed;
             _view.QuitButtonPressed += OnQuitButtonPressed;
         }
@@ -25,5 +29,23 @@ namespace Presenter.MainMenu
         private void OnStartButtonPressed() => SceneManager.LoadScene("Scenes/SampleScene");
 
         private void OnQuitButtonPressed() => Application.Quit();
+
+        private int LoadDifficulty()
+        {
+            string path = Path.Combine(Application.persistentDataPath, "data.oi");
+            
+            if (File.Exists(path))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                FileStream stream = new FileStream(path, FileMode.Open);
+                var data = binaryFormatter.Deserialize(stream) as Data;
+                stream.Close();
+                return data.achievedDifficulty;
+            }
+
+            Debug.Log("Save file not found");
+            return 1;
+        }
+        
     }
 }
